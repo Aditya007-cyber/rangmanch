@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rangmanch — Clickable Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#16233E;
+  --ink-2:#212F4C;
+  --saffron:#F0A93B;
+  --saffron-dark:#CB8A22;
+  --vermilion:#B84B26;
+  --cream:#FAF6EF;
+  --paper:#FFFFFF;
+  --sage:#2F7A5C;
+  --sage-light:#E7F2EB;
+  --slate:#5B6472;
+  --line:#E7E0D3;
+  --line-2:#EFEAE0;
+  --danger:#B84B26;
+  --radius:14px;
+  --radius-sm:9px;
+  --shadow:0 1px 2px rgba(22,35,62,.05), 0 8px 24px -12px rgba(22,35,62,.18);
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:'Inter',-apple-system,sans-serif;
+  background:#E9E2D2;
+  color:var(--ink);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+.mono{font-family:'IBM Plex Mono',monospace;}
+.display{font-family:'Fraunces',serif;}
+button{font-family:inherit; cursor:pointer;}
+a{color:inherit;}
+::-webkit-scrollbar{width:8px; height:8px;}
+::-webkit-scrollbar-thumb{background:#D9CFB8; border-radius:8px;}
+
+/* ---------- device toggle bar ---------- */
+.demo-bar{
+  width:100%;
+  max-width:1180px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:14px 18px;
+  gap:12px;
+  flex-wrap:wrap;
+}
+.demo-bar .brand-mark{
+  font-family:'Fraunces',serif;
+  font-weight:600;
+  font-size:15px;
+  color:var(--ink);
+  letter-spacing:.2px;
+}
+.demo-bar .brand-mark span{color:var(--vermilion);}
+.demo-bar .brand-tag{font-size:12px; color:var(--slate);}
+
+/* ---------- device wrap ---------- */
+.device-wrap{
+  width:100%;
+  max-width:1180px;
+  padding:0 18px 40px;
+  display:flex;
+  justify-content:center;
+}
+
+.app-shell{
+  width:100%;
+  background:var(--cream);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  overflow:hidden;
+  display:flex;
+  min-height:760px;
+  border:1px solid var(--line);
+}
+
+/* ---------- sidebar ---------- */
+.sidebar{
+  width:230px;
+  flex-shrink:0;
+  background:var(--ink);
+  color:#EDEAE2;
+  display:flex;
+  flex-direction:column;
+  padding:20px 14px;
+}
+.sidebar .logo{
+  font-family:'Fraunces',serif;
+  font-size:20px;
+  font-weight:600;
+  padding:4px 10px 20px;
+  color:#fff;
+}
+.sidebar .logo span{color:var(--saffron);}
+.role-switch{
+  display:flex;
+  background:rgba(255,255,255,.08);
+  border-radius:10px;
+  padding:3px;
+  margin:0 4px 18px;
+}
+.role-switch button{
+  flex:1;
+  border:none;
+  background:transparent;
+  color:#B9C1D6;
+  font-size:11.5px;
+  font-weight:600;
+  padding:7px 4px;
+  border-radius:8px;
+}
+.role-switch button.active{background:var(--saffron); color:var(--ink);}
+.persona-card{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:9px 10px;
+  margin:0 4px 18px;
+  background:rgba(255,255,255,.06);
+  border-radius:10px;
+}
+.avatar{
+  width:34px;height:34px;border-radius:50%;
+  background:var(--saffron);
+  color:var(--ink);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:13px;flex-shrink:0;
+}
+.persona-card .p-name{font-size:12.5px;font-weight:600;color:#fff;}
+.persona-card .p-sub{font-size:10.5px;color:#9AA4BE;}
+.persona-swap{
+  margin:0 4px 20px;
+  font-size:10.5px;
+  color:var(--saffron);
+  background:none;border:none;padding:0 10px;
+  text-align:left;font-weight:600;
+}
+.nav-list{list-style:none;margin:0;padding:0;flex:1;}
+.nav-list li{margin-bottom:2px;}
+.nav-list button{
+  width:100%;
+  display:flex;
+  align-items:center;
+  gap:11px;
+  border:none;
+  background:transparent;
+  color:#C4CADD;
+  padding:10px 12px;
+  border-radius:9px;
+  font-size:13px;
+  font-weight:500;
+  text-align:left;
+}
+.nav-list button svg{flex-shrink:0; opacity:.85;}
+.nav-list button.active{background:rgba(240,169,59,.14); color:#fff;}
+.nav-list button.active svg{opacity:1; stroke:var(--saffron);}
+.nav-list button:hover:not(.active){background:rgba(255,255,255,.05);}
+.sidebar-foot{
+  font-size:10.5px;
+  color:#7B8399;
+  padding:10px 12px;
+  border-top:1px solid rgba(255,255,255,.08);
+  margin-top:8px;
+  line-height:1.5;
+}
+
+/* ---------- main column ---------- */
+.main-col{flex:1; display:flex; flex-direction:column; min-width:0;}
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:14px 24px;
+  border-bottom:1px solid var(--line);
+  background:var(--paper);
+  gap:14px;
+}
+.topbar .hamburger{display:none; border:none;background:none;}
+.topbar .title-block .eyebrow{font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--vermilion); font-weight:700;}
+.topbar .title-block h1{font-family:'Fraunces',serif; font-size:20px; margin:2px 0 0; font-weight:600; color:var(--ink);}
+.topbar-right{display:flex; align-items:center; gap:12px;}
+.icon-btn{
+  width:34px;height:34px;border-radius:50%;
+  border:1px solid var(--line); background:var(--paper);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--slate);
+}
+.main-area{
+  flex:1;
+  overflow-y:auto;
+  padding:22px 24px 90px;
+}
+.bottom-nav{display:none;}
+
+/* ---------- generic bits ---------- */
+.grid{display:grid; gap:14px;}
+.grid-stats{grid-template-columns:repeat(4,1fr);}
+.grid-2{grid-template-columns:1fr 1fr;}
+.grid-3{grid-template-columns:repeat(3,1fr);}
+.card{
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:16px;
+}
+.stat-card .stat-label{font-size:11px; color:var(--slate); font-weight:600; text-transform:uppercase; letter-spacing:.04em;}
+.stat-card .stat-value{font-family:'IBM Plex Mono',monospace; font-size:23px; font-weight:600; margin-top:6px; color:var(--ink);}
+.stat-card .stat-delta{font-size:11.5px; margin-top:5px; color:var(--sage); font-weight:600;}
+.section-head{display:flex; align-items:center; justify-content:space-between; margin:26px 0 12px;}
+.section-head:first-child{margin-top:0;}
+.section-head h2{font-family:'Fraunces',serif; font-size:17px; font-weight:600; margin:0;}
+.section-head .link-btn{font-size:12.5px; font-weight:600; color:var(--vermilion); background:none; border:none;}
+
+.btn{
+  border:none; border-radius:9px; padding:9px 16px; font-weight:600; font-size:13px;
+  display:inline-flex; align-items:center; gap:7px;
+}
+.btn-primary{background:var(--ink); color:#fff;}
+.btn-primary:hover{background:var(--ink-2);}
+.btn-accent{background:var(--saffron); color:var(--ink);}
+.btn-accent:hover{background:var(--saffron-dark);}
+.btn-ghost{background:transparent; color:var(--ink); border:1px solid var(--line);}
+.btn-ghost:hover{background:var(--line-2);}
+.btn-sm{padding:6px 11px; font-size:12px;}
+.btn-block{width:100%; justify-content:center;}
+.btn[disabled]{opacity:.45; pointer-events:none;}
+
+.chip{
+  display:inline-flex; align-items:center; gap:5px;
+  font-size:11px; font-weight:600; padding:4px 9px; border-radius:999px;
+  background:var(--line-2); color:var(--ink);
+}
+.chip-dot{width:6px;height:6px;border-radius:50%;}
+.badge-verified{
+  display:inline-flex; align-items:center; gap:4px;
+  font-size:10.5px; font-weight:700; color:var(--sage);
+  background:var(--sage-light); padding:3px 8px; border-radius:999px;
+}
+.status-pill{font-size:10.5px; font-weight:700; padding:4px 10px; border-radius:999px;}
+.status-negotiating{background:#FCEFDD; color:var(--saffron-dark);}
+.status-escrow{background:#E6EEFB; color:#2C5CB0;}
+.status-delivered{background:#F1E7FB; color:#6A3FB8;}
+.status-paid{background:var(--sage-light); color:var(--sage);}
+
+/* ledger strip - signature element */
+.ledger{
+  display:flex; border:1px solid var(--line); border-radius:var(--radius); overflow:hidden;
+  background:var(--paper);
+}
+.ledger .seg{flex:1; padding:14px 16px; border-right:1px dashed var(--line);}
+.ledger .seg:last-child{border-right:none; background:var(--sage-light);}
+.ledger .seg .k{font-size:10.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--slate); font-weight:700;}
+.ledger .seg .v{font-family:'IBM Plex Mono',monospace; font-size:19px; font-weight:600; margin-top:4px;}
+.ledger .seg:last-child .v{color:var(--sage);}
+.ledger .seg.fee .v{color:var(--vermilion);}
+
+.seal{
+  width:52px;height:52px;border-radius:50%;
+  border:2px solid var(--sage);
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;
+  color:var(--sage); flex-shrink:0;
+}
+.seal .n{font-family:'IBM Plex Mono',monospace; font-weight:700; font-size:15px; line-height:1;}
+.seal .l{font-size:7px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; margin-top:1px;}
+
+.creator-card{background:var(--paper); border:1px solid var(--line); border-radius:var(--radius); padding:15px; display:flex; flex-direction:column; gap:10px;}
+.creator-card .cc-head{display:flex; align-items:center; gap:10px;}
+.creator-card .cc-name{font-weight:700; font-size:14px;}
+.creator-card .cc-sub{font-size:11.5px; color:var(--slate);}
+.creator-card .cc-stats{display:flex; gap:14px; font-size:11.5px; color:var(--slate);}
+.creator-card .cc-stats b{color:var(--ink); font-family:'IBM Plex Mono',monospace;}
+
+.brief-card{background:var(--paper); border:1px solid var(--line); border-radius:var(--radius); padding:16px;}
+.brief-card .bc-top{display:flex; justify-content:space-between; align-items:flex-start; gap:10px;}
+.brief-card h3{font-size:14.5px; margin:0 0 4px; font-family:'Fraunces',serif; font-weight:600;}
+.brief-card .bc-meta{font-size:11.5px; color:var(--slate); margin-bottom:10px;}
+.brief-card .bc-tags{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px;}
+
+table.data-table{width:100%; border-collapse:collapse; font-size:12.5px;}
+table.data-table th{
+  text-align:left; font-size:10.5px; text-transform:uppercase; letter-spacing:.04em;
+  color:var(--slate); padding:8px 10px; border-bottom:1px solid var(--line); font-weight:700;
+}
+table.data-table td{padding:10px; border-bottom:1px solid var(--line-2); vertical-align:middle;}
+table.data-table tr:hover td{background:#FBF8F1;}
+
+.form-row{margin-bottom:14px;}
+.form-row label{display:block; font-size:12px; font-weight:700; margin-bottom:6px; color:var(--ink);}
+.form-row .hint{font-size:11px; color:var(--slate); margin-top:5px;}
+input[type=text], input[type=number], select, textarea{
+  width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:9px;
+  font-family:'Inter',sans-serif; font-size:13px; background:var(--paper); color:var(--ink);
+}
+textarea{resize:vertical; min-height:70px;}
+.pill-select{display:flex; gap:8px; flex-wrap:wrap;}
+.pill-select button{
+  border:1px solid var(--line); background:var(--paper); border-radius:999px;
+  padding:7px 14px; font-size:12.5px; font-weight:600; color:var(--slate);
+}
+.pill-select button.sel{background:var(--ink); color:#fff; border-color:var(--ink);}
+
+.timeline{display:flex; margin:18px 0;}
+.timeline .tl-step{flex:1; text-align:center; position:relative;}
+.timeline .tl-step::before{
+  content:""; position:absolute; top:12px; left:-50%; width:100%; height:2px; background:var(--line); z-index:0;
+}
+.timeline .tl-step:first-child::before{display:none;}
+.timeline .tl-step.done::before{background:var(--sage);}
+.timeline .dot{
+  width:26px;height:26px; border-radius:50%; background:var(--paper); border:2px solid var(--line);
+  display:flex; align-items:center; justify-content:center; margin:0 auto 6px; position:relative; z-index:1;
+  font-size:12px; color:var(--slate); font-weight:700;
+}
+.timeline .tl-step.done .dot{background:var(--sage); border-color:var(--sage); color:#fff;}
+.timeline .tl-step.current .dot{background:var(--saffron); border-color:var(--saffron); color:var(--ink);}
+.timeline .tl-label{font-size:10.5px; font-weight:600; color:var(--slate);}
+.timeline .tl-step.done .tl-label, .timeline .tl-step.current .tl-label{color:var(--ink);}
+
+.chat-thread{border:1px solid var(--line); border-radius:var(--radius); background:var(--paper); display:flex; flex-direction:column; height:300px;}
+.chat-msgs{flex:1; overflow-y:auto; padding:14px; display:flex; flex-direction:column; gap:10px;}
+.msg{max-width:75%; padding:9px 12px; border-radius:12px; font-size:12.5px; line-height:1.45;}
+.msg.them{background:var(--line-2); align-self:flex-start; border-bottom-left-radius:3px;}
+.msg.me{background:var(--ink); color:#fff; align-self:flex-end; border-bottom-right-radius:3px;}
+.msg .t{font-size:9.5px; opacity:.6; margin-top:4px;}
+.chat-input{display:flex; gap:8px; padding:10px; border-top:1px solid var(--line);}
+.chat-input input{flex:1;}
+
+.empty-state{text-align:center; padding:50px 20px; color:var(--slate);}
+.empty-state svg{margin-bottom:12px; opacity:.5;}
+.empty-state h3{font-family:'Fraunces',serif; color:var(--ink); font-size:16px; margin:0 0 6px;}
+.empty-state p{font-size:12.5px; max-width:320px; margin:0 auto;}
+
+.toast{
+  position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
+  background:var(--ink); color:#fff; padding:11px 20px; border-radius:999px;
+  font-size:12.5px; font-weight:600; display:flex; align-items:center; gap:8px;
+  box-shadow:0 10px 30px -8px rgba(0,0,0,.4); z-index:999; opacity:0; pointer-events:none;
+  transition:opacity .25s, transform .25s;
+}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(-6px);}
+
+.progress-dots{display:flex; gap:6px; justify-content:center; margin:18px 0 6px;}
+.progress-dots span{width:7px; height:7px; border-radius:50%; background:var(--line);}
+.progress-dots span.on{background:var(--saffron); width:20px; border-radius:4px;}
+
+.onboard-wrap{max-width:420px; margin:10px auto; text-align:center;}
+.onboard-wrap .step-icon{
+  width:64px;height:64px; border-radius:50%; background:var(--sage-light); color:var(--sage);
+  display:flex; align-items:center; justify-content:center; margin:0 auto 16px;
+}
+.onboard-wrap h2{font-family:'Fraunces',serif; font-size:21px; margin:0 0 8px;}
+.onboard-wrap p.sub{font-size:13px; color:var(--slate); margin:0 0 20px; line-height:1.5;}
+.lang-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:8px;}
+.lang-grid button{
+  border:1.5px solid var(--line); background:var(--paper); border-radius:12px; padding:16px 10px;
+  font-weight:700; font-size:14px; text-align:left;
+}
+.lang-grid button .native{display:block; font-family:'Fraunces',serif; font-size:19px; margin-bottom:2px;}
+.lang-grid button.sel{border-color:var(--saffron); background:#FEF7EA;}
+.connect-row{display:flex; align-items:center; justify-content:space-between; border:1px solid var(--line); border-radius:12px; padding:13px 14px; margin-bottom:10px; background:var(--paper); text-align:left;}
+.connect-row .cr-left{display:flex; align-items:center; gap:10px;}
+.connect-row .platform-ic{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:12px;}
+
+.score-ring-wrap{position:relative; width:74px; height:74px; flex-shrink:0;}
+.score-ring-wrap .ring-num{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; flex-direction:column;}
+.score-ring-wrap .ring-num b{font-family:'IBM Plex Mono',monospace; font-size:18px;}
+.score-ring-wrap .ring-num small{font-size:8px; color:var(--slate); font-weight:700;}
+
+.filter-bar{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px;}
+.kanban{display:flex; gap:14px; overflow-x:auto; padding-bottom:10px;}
+.kanban-col{min-width:220px; flex:1;}
+.kanban-col h4{font-size:11.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--slate); margin:0 0 10px; display:flex; justify-content:space-between;}
+.kanban-card{background:var(--paper); border:1px solid var(--line); border-radius:11px; padding:11px; margin-bottom:9px; font-size:12px;}
+.kanban-card .kc-name{font-weight:700; margin-bottom:3px;}
+.kanban-card .kc-meta{color:var(--slate); font-size:11px; margin-bottom:8px;}
+
+.bar-chart{display:flex; align-items:flex-end; gap:14px; height:150px; padding-top:10px;}
+.bar-chart .bar-col{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%;}
+.bar-chart .bar{width:100%; max-width:34px; border-radius:6px 6px 2px 2px; background:var(--saffron);}
+.bar-chart .bar-val{font-size:10px; font-family:'IBM Plex Mono',monospace; margin-bottom:4px; color:var(--ink); font-weight:600;}
+.bar-chart .bar-label{font-size:10px; color:var(--slate); margin-top:6px; text-align:center;}
+
+.modal-overlay{position:fixed; inset:0; background:rgba(22,23,35,.45); display:flex; align-items:center; justify-content:center; z-index:200; padding:20px;}
+.modal{background:var(--paper); border-radius:16px; max-width:460px; width:100%; padding:22px; max-height:85vh; overflow-y:auto;}
+.modal h3{font-family:'Fraunces',serif; margin:0 0 4px; font-size:18px;}
+.modal .modal-close{float:right; border:none; background:var(--line-2); border-radius:50%; width:28px; height:28px;}
+
+/* ---------- responsive: this is a real fluid layout, not a device mock ---------- */
+/* Tablet: tighten stat grids before the full mobile switch */
+@media (max-width:1100px){
+  .grid-stats{grid-template-columns:1fr 1fr;}
+}
+/* Mobile browser widths: sidebar becomes a drawer, nav moves to a bottom bar */
+@media (max-width:900px){
+  .demo-bar{padding:12px 14px;}
+  .device-wrap{padding:0 0 20px;}
+  .app-shell{min-height:100vh; border-radius:0; border:none;}
+  .sidebar{display:none;}
+  .bottom-nav{
+    display:flex; position:sticky; bottom:0; background:var(--paper); border-top:1px solid var(--line);
+    padding:6px 4px 8px;
+  }
+  .topbar .hamburger{display:flex; align-items:center; justify-content:center;}
+  .grid-2, .grid-3{grid-template-columns:1fr;}
+  .main-col{width:100%;}
+  .main-area{padding:16px 14px 90px;}
+  .ledger{flex-direction:column;}
+  .ledger .seg{border-right:none; border-bottom:1px dashed var(--line);}
+}
+@media (max-width:520px){
+  .grid-stats{grid-template-columns:1fr 1fr;}
+}
+
+.bottom-nav button{
+  flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; background:none; border:none;
+  color:var(--slate); font-size:9.5px; font-weight:600; padding:6px 2px;
+}
+.bottom-nav button.active{color:var(--ink);}
+.bottom-nav button.active svg{stroke:var(--saffron);}
+
+/* drawer for mobile persona/role switch */
+.drawer-overlay{position:fixed; inset:0; background:rgba(22,23,35,.4); z-index:150; display:none;}
+.drawer-overlay.show{display:block;}
+.drawer{position:absolute; left:0; top:0; bottom:0; width:250px; background:var(--ink); padding:20px 14px; overflow-y:auto;}
+
+@media (min-width:901px){
+  .drawer-overlay{display:none !important;}
+}
+</style>
+</head>
+<body>
+
+<div class="demo-bar">
+  <div class="brand-mark">Rangmanch<span>.</span></div>
+  <div class="brand-tag">Clickable prototype · resize the window to see the responsive mobile layout</div>
+</div>
+
+<div class="device-wrap" id="deviceWrap">
+  <div class="app-shell" id="appShell"><!-- injected --></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ======================= ICONS ======================= */
+function icon(name, size){
+  size = size || 18;
+  const s = `width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"`;
+  const map = {
+    dashboard:`<svg ${s}><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>`,
+    briefcase:`<svg ${s}><rect x="2.5" y="7" width="19" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M2.5 12h19"/></svg>`,
+    chat:`<svg ${s}><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>`,
+    tag:`<svg ${s}><path d="M20.59 13.41 12 22l-9-9 8.59-8.59A2 2 0 0 1 13 4h6a2 2 0 0 1 2 2v6a2 2 0 0 1-.41 1.41z"/><circle cx="16.5" cy="7.5" r="1"/></svg>`,
+    user:`<svg ${s}><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-7 8-7s8 3 8 7"/></svg>`,
+    plus:`<svg ${s}><path d="M12 5v14M5 12h14"/></svg>`,
+    search:`<svg ${s}><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>`,
+    grid:`<svg ${s}><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>`,
+    chart:`<svg ${s}><path d="M3 3v18h18"/><rect x="7" y="12" width="3" height="6"/><rect x="12.5" y="8" width="3" height="10"/><rect x="18" y="5" width="3" height="13"/></svg>`,
+    menu:`<svg ${s}><path d="M3 6h18M3 12h18M3 18h18"/></svg>`,
+    close:`<svg ${s}><path d="M18 6 6 18M6 6l12 12"/></svg>`,
+    send:`<svg ${s}><path d="m22 2-7 20-4-9-9-4 20-7z"/></svg>`,
+    check:`<svg ${s}><path d="M20 6 9 17l-5-5"/></svg>`,
+    seal:`<svg ${s}><circle cx="12" cy="12" r="9"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg>`,
+    bell:`<svg ${s}><path d="M6 8a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>`,
+    eye:`<svg ${s}><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>`,
+    money:`<svg ${s}><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/><path d="M6 10v.01M18 14v.01"/></svg>`,
+    shield:`<svg ${s}><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6l-8-3z"/></svg>`,
+    arrowr:`<svg ${s}><path d="M5 12h14M13 6l6 6-6 6"/></svg>`,
+    empty:`<svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="7" width="18" height="14" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M3 12h18"/></svg>`,
+    filter:`<svg ${s}><path d="M4 5h16M7 12h10M10 19h4"/></svg>`
+  };
+  return map[name] || '';
+}
+
+/* ======================= MOCK DATA ======================= */
+const PERSONAS = {
+  rajan:{id:'rajan', role:'creator', name:'Rajan Mishra', initials:'RM', niche:'Food & Lifestyle', location:'Varanasi, Uttar Pradesh', language:'Hindi', platform:'YouTube', followers:'18K subs', engagement:'12%', trust:78, authenticity:94, earnings:'₹9,400', rate:'₹4,000–6,000 / video'},
+  preethi:{id:'preethi', role:'creator', name:'Preethi Nair', initials:'PN', niche:'Beauty & Lifestyle', location:'Coimbatore, Tamil Nadu', language:'Tamil', platform:'Instagram', followers:'72K followers', engagement:'9%', trust:91, authenticity:98, earnings:'₹27,800', rate:'₹14,000–18,000 / reel'},
+  priya:{id:'priya', role:'brand', name:'Priya Sharma', initials:'PS', title:'Digital Marketing Manager', company:'GlowSkin (D2C Skincare)', location:'Mumbai', budget:'₹15L / quarter'},
+  arjun:{id:'arjun', role:'agency', name:'Arjun Mehta', initials:'AM', title:'Founder', company:'Boutique Influencer Agency', location:'Delhi NCR', clients:'10 brand clients'}
+};
+
+const CREATORS = [
+  {id:'rajan', name:'Rajan Mishra', niche:'Food & Lifestyle', location:'Varanasi, UP', language:'Hindi', platform:'YouTube', followers:'18K', engagement:'12%', trust:78, authenticity:94, rate:'₹4,000–6,000 / video', verified:true},
+  {id:'preethi', name:'Preethi Nair', niche:'Beauty & Lifestyle', location:'Coimbatore, TN', language:'Tamil', platform:'Instagram', followers:'72K', engagement:'9%', trust:91, authenticity:98, rate:'₹14,000–18,000 / reel', verified:true},
+  {id:'meena', name:'Meena Devi', niche:'Home & Cooking', location:'Patna, Bihar', language:'Hindi', platform:'YouTube', followers:'34K', engagement:'14%', trust:83, authenticity:97, rate:'₹6,500–9,000 / video', verified:true},
+  {id:'karthik', name:'Karthik Raja', niche:'Tech & Gadgets', location:'Madurai, TN', language:'Tamil', platform:'YouTube', followers:'61K', engagement:'8%', trust:74, authenticity:89, rate:'₹9,000–13,000 / video', verified:true},
+  {id:'ananya', name:'Ananya Das', niche:'Fashion', location:'Bhubaneswar, Odisha', language:'Odia', platform:'Instagram', followers:'29K', engagement:'11%', trust:69, authenticity:92, rate:'₹5,000–7,500 / reel', verified:false},
+  {id:'suresh', name:'Suresh Yadav', niche:'Agriculture & Rural Life', location:'Lucknow, UP', language:'Hindi', platform:'ShareChat', followers:'46K', engagement:'16%', trust:71, authenticity:90, rate:'₹4,500–6,500 / post', verified:true},
+  {id:'divya', name:'Divya Prakash', niche:'Beauty', location:'Salem, TN', language:'Tamil', platform:'Instagram', followers:'22K', engagement:'13%', trust:80, authenticity:95, rate:'₹5,500–7,800 / reel', verified:true},
+  {id:'ravi', name:'Ravi Sahoo', niche:'Comedy & Vlogs', location:'Cuttack, Odisha', language:'Odia', platform:'YouTube', followers:'38K', engagement:'10%', trust:65, authenticity:88, rate:'₹6,000–8,500 / video', verified:false},
+];
+
+const BRIEFS = [
+  {id:1, brand:'GlowSkin (D2C Skincare)', region:'UP + Bihar · Hindi Belt', niche:'Beauty / Lifestyle', budget:'₹8,000–15,000', deliverable:'1 Reel + 1 Story', language:'Hindi', applied:false},
+  {id:2, brand:'Coimbatore Organics', region:'Tamil Nadu', niche:'Food & Wellness', budget:'₹10,000–20,000', deliverable:'1 YouTube video', language:'Tamil', applied:false},
+  {id:3, brand:'Odisha Handloom Co.', region:'Odisha', niche:'Fashion', budget:'₹6,000–12,000', deliverable:'3 Instagram reels', language:'Odia', applied:false},
+  {id:4, brand:'Bharat Snacks Ltd.', region:'Pan-Hindi Belt', niche:'Food', budget:'₹5,000–9,000', deliverable:'1 Reel', language:'Hindi', applied:false},
+];
+
+let DEALS = [
+  {id:101, creator:'Rajan Mishra', brand:'GlowSkin (D2C Skincare)', brief:'Hindi Belt Beauty Push', status:'escrow', brandPays:12000, feePct:6, thread:[
+    {from:'them', text:'Hi Rajan — loved your Varanasi street-food series. Can you do a review-style reel for our new face wash?', t:'Mon 10:02'},
+    {from:'me', text:'Thank you! Yes, I can shoot it this week. My rate for a review reel is ₹12,000.', t:'Mon 10:20'},
+    {from:'them', text:'Works for us — funding escrow now.', t:'Mon 11:05'},
+  ]},
+  {id:102, creator:'Rajan Mishra', brand:'Bharat Snacks Ltd.', brief:'Regional Snack Launch', status:'negotiating', brandPays:7000, feePct:6, thread:[
+    {from:'them', text:'We are launching a new namkeen range in UP. Interested in a taste-test reel?', t:'Today 09:12'},
+  ]},
+  {id:103, creator:'Preethi Nair', brand:'Coimbatore Organics', brief:'Wellness Oil Launch', status:'paid', brandPays:16000, feePct:6, thread:[
+    {from:'them', text:'Payment released — thank you for the wonderful video!', t:'Last week'},
+  ]},
+  {id:104, creator:'Preethi Nair', brand:'GlowSkin (D2C Skincare)', brief:'Tamil Nadu Beauty Bundle', status:'delivered', brandPays:18000, feePct:6, thread:[
+    {from:'me', text:'Reel is live! Sharing the link and screenshots now.', t:'Yesterday'},
+  ]},
+];
+
+let dealSeq = 105;
+
+/* ======================= STATE ======================= */
+const state = {
+  role: 'creator',
+  persona: 'rajan',
+  view: 'onboarding',
+  onboardStep: 0,
+  onboardLang: null,
+  onboardConnected: {yt:false, ig:false},
+  activeDeal: null,
+  shortlistCreator: null,
+  drawerOpen:false
+};
+
+function persona(){ return PERSONAS[state.persona]; }
+
+/* ======================= NAV CONFIG ======================= */
+const NAV = {
+  creator:[
+    {id:'dashboard', label:'Dashboard', icon:'dashboard'},
+    {id:'briefs', label:'Find Briefs', icon:'briefcase'},
+    {id:'deals', label:'My Deals', icon:'chat'},
+    {id:'pricing', label:'Pricing Tool', icon:'tag'},
+    {id:'profile', label:'My Profile', icon:'user'},
+  ],
+  brand:[
+    {id:'dashboard', label:'Dashboard', icon:'dashboard'},
+    {id:'newbrief', label:'New Brief', icon:'plus'},
+    {id:'shortlist', label:'Shortlist', icon:'search'},
+    {id:'deals', label:'Deals', icon:'chat'},
+    {id:'analytics', label:'Analytics', icon:'chart'},
+  ],
+  agency:[
+    {id:'dashboard', label:'Dashboard', icon:'dashboard'},
+    {id:'bulksearch', label:'Bulk Search', icon:'search'},
+    {id:'board', label:'Campaign Board', icon:'grid'},
+    {id:'deals', label:'Deals', icon:'chat'},
+    {id:'analytics', label:'Analytics', icon:'chart'},
+  ]
+};
+const BOTTOM_NAV_LIMIT = 5;
+
+const ROLE_LABEL = {creator:'Creator', brand:'Brand', agency:'Agency'};
+const ROLE_PERSONAS = {creator:['rajan','preethi'], brand:['priya'], agency:['arjun']};
+
+/* ======================= HELPERS ======================= */
+function fmtINR(n){ return '₹' + n.toLocaleString('en-IN'); }
+function scoreColor(v){ return v>=85 ? 'var(--sage)' : v>=70 ? 'var(--saffron-dark)' : 'var(--vermilion)'; }
+
+function scoreRing(value, label){
+  const r = 30, c = 2*Math.PI*r;
+  const off = c - (value/100)*c;
+  const col = scoreColor(value);
+  return `<div class="score-ring-wrap">
+    <svg width="74" height="74" viewBox="0 0 74 74">
+      <circle cx="37" cy="37" r="${r}" fill="none" stroke="var(--line)" stroke-width="6"/>
+      <circle cx="37" cy="37" r="${r}" fill="none" stroke="${col}" stroke-width="6" stroke-linecap="round"
+        stroke-dasharray="${c}" stroke-dashoffset="${off}" transform="rotate(-90 37 37)"/>
+    </svg>
+    <div class="ring-num"><b>${value}</b><small>${label}</small></div>
+  </div>`;
+}
+
+function ledger(brandPays, feePct){
+  const fee = Math.round(brandPays * feePct/100);
+  const receive = brandPays - fee;
+  const oldAgency = Math.round(brandPays * 0.375); // ~37.5% avg of old 35-40%
+  return `<div class="ledger">
+    <div class="seg"><div class="k">Brand pays</div><div class="v">${fmtINR(brandPays)}</div></div>
+    <div class="seg fee"><div class="k">Platform fee (${feePct}%)</div><div class="v">−${fmtINR(fee)}</div></div>
+    <div class="seg"><div class="k">You receive</div><div class="v">${fmtINR(receive)}</div></div>
+  </div>
+  <div class="hint" style="margin-top:8px; text-align:center;">Under the old exclusive-agency model, this same deal would typically pay a creator only <b>${fmtINR(oldAgency)}</b> (35–40%).</div>`;
+}
+
+function statusPill(status){
+  const map = {negotiating:['status-negotiating','Negotiating'], escrow:['status-escrow','Escrow funded'], delivered:['status-delivered','Delivered'], paid:['status-paid','Paid']};
+  const [cls,label] = map[status];
+  return `<span class="status-pill ${cls}">${label}</span>`;
+}
+
+function timelineFor(status){
+  const steps = [
+    {id:'negotiating', label:'Negotiating'},
+    {id:'escrow', label:'Escrow Funded'},
+    {id:'delivered', label:'Delivered'},
+    {id:'paid', label:'Paid'}
+  ];
+  const order = ['negotiating','escrow','delivered','paid'];
+  const idx = order.indexOf(status);
+  return `<div class="timeline">${steps.map((s,i)=>{
+    let cls = i<idx ? 'done' : i===idx ? 'current' : '';
+    return `<div class="tl-step ${cls}"><div class="dot">${i<idx?icon('check',12):i+1}</div><div class="tl-label">${s.label}</div></div>`;
+  }).join('')}</div>`;
+}
+
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.innerHTML = icon('check',14) + ' ' + msg;
+  t.classList.add('show');
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+/* ======================= RENDER: SHELL ======================= */
+function renderShell(){
+  const p = persona();
+  const navItems = NAV[state.role];
+  const shell = document.getElementById('appShell');
+
+  if(state.view === 'onboarding'){
+    shell.innerHTML = renderOnboarding();
+    return;
+  }
+
+  shell.innerHTML = `
+    <div class="drawer-overlay ${state.drawerOpen?'show':''}" onclick="closeDrawer(event)">
+      <div class="drawer" onclick="event.stopPropagation()">
+        ${sidebarInner(p, navItems, true)}
+      </div>
+    </div>
+    <aside class="sidebar">${sidebarInner(p, navItems, false)}</aside>
+    <div class="main-col">
+      <header class="topbar">
+        <button class="hamburger icon-btn" onclick="openDrawer()">${icon('menu',18)}</button>
+        <div class="title-block">
+          <div class="eyebrow">${ROLE_LABEL[state.role]} workspace</div>
+          <h1>${navTitle()}</h1>
+        </div>
+        <div class="topbar-right">
+          <button class="icon-btn">${icon('bell',16)}</button>
+          <div class="avatar" style="width:32px;height:32px;font-size:11px;">${p.initials}</div>
+        </div>
+      </header>
+      <main class="main-area" id="mainArea">${renderView()}</main>
+      <nav class="bottom-nav">
+        ${navItems.slice(0,BOTTOM_NAV_LIMIT).map(n=>`
+          <button class="${state.view===n.id?'active':''}" onclick="go('${n.id}')">
+            ${icon(n.icon,19)}<span>${n.label.split(' ')[0]}</span>
+          </button>`).join('')}
+      </nav>
+    </div>
+  `;
+}
+
+function sidebarInner(p, navItems, inDrawer){
+  return `
+    <div class="logo">Rangmanch<span>.</span></div>
+    <div class="role-switch">
+      ${Object.keys(ROLE_LABEL).map(r=>`<button class="${state.role===r?'active':''}" onclick="switchRole('${r}')">${ROLE_LABEL[r]}</button>`).join('')}
+    </div>
+    <div class="persona-card">
+      <div class="avatar">${p.initials}</div>
+      <div>
+        <div class="p-name">${p.name}</div>
+        <div class="p-sub">${p.role==='creator' ? p.location : p.company}</div>
+      </div>
+    </div>
+    ${ROLE_PERSONAS[state.role].length>1 ? `<button class="persona-swap" onclick="swapPersona()">${icon('user',11)} Switch to ${otherPersonaName()} &rarr;</button>` : ''}
+    <ul class="nav-list">
+      ${navItems.map(n=>`<li><button class="${state.view===n.id?'active':''}" onclick="go('${n.id}')">${icon(n.icon,17)} ${n.label}</button></li>`).join('')}
+    </ul>
+    <div class="sidebar-foot">Prototype build · v1.0<br/>Rangmanch — fairness &amp; liberation platform for regional creators.</div>
+  `;
+}
+
+function otherPersonaName(){
+  const others = ROLE_PERSONAS[state.role].filter(id=>id!==state.persona);
+  return PERSONAS[others[0]].name.split(' ')[0];
+}
+function swapPersona(){
+  const others = ROLE_PERSONAS[state.role].filter(id=>id!==state.persona);
+  state.persona = others[0];
+  renderShell();
+}
+function switchRole(role){
+  state.role = role;
+  state.persona = ROLE_PERSONAS[role][0];
+  state.view = NAV[role][0].id;
+  renderShell();
+}
+function openDrawer(){ state.drawerOpen = true; renderShell(); }
+function closeDrawer(e){ state.drawerOpen = false; renderShell(); }
+function go(view){ state.view = view; state.drawerOpen=false; window.scrollTo(0,0); renderShell(); }
+
+function navTitle(){
+  const found = NAV[state.role].find(n=>n.id===state.view);
+  return found ? found.label : 'Rangmanch';
+}
+
+/* ======================= RENDER: VIEW ROUTER ======================= */
+function renderView(){
+  if(state.role==='creator'){
+    if(state.view==='dashboard') return creatorDashboard();
+    if(state.view==='briefs') return creatorBriefs();
+    if(state.view==='deals') return dealsView('creator');
+    if(state.view==='pricing') return pricingTool();
+    if(state.view==='profile') return creatorProfile();
+  }
+  if(state.role==='brand'){
+    if(state.view==='dashboard') return brandDashboard();
+    if(state.view==='newbrief') return newBrief();
+    if(state.view==='shortlist') return shortlistView();
+    if(state.view==='deals') return dealsView('brand');
+    if(state.view==='analytics') return analyticsView('brand');
+  }
+  if(state.role==='agency'){
+    if(state.view==='dashboard') return agencyDashboard();
+    if(state.view==='bulksearch') return bulkSearchView();
+    if(state.view==='board') return boardView();
+    if(state.view==='deals') return dealsView('agency');
+    if(state.view==='analytics') return analyticsView('agency');
+  }
+  return `<div class="empty-state">${icon('empty')}<h3>Coming soon</h3><p>This screen isn't wired up in the prototype yet.</p></div>`;
+}
+
+/* ======================= CREATOR: DASHBOARD ======================= */
+function creatorDashboard(){
+  const p = persona();
+  const myDeals = DEALS.filter(d=>d.creator===p.name);
+  const activeCount = myDeals.filter(d=>d.status!=='paid').length;
+  return `
+    <div class="section-head" style="margin-top:0;">
+      <h2>Welcome back, ${p.name.split(' ')[0]}</h2>
+    </div>
+    <div class="grid grid-stats">
+      <div class="card stat-card"><div class="stat-label">Trust score</div><div class="stat-value">${p.trust}/100</div><div class="stat-delta">${icon('shield',11)} verified profile</div></div>
+      <div class="card stat-card"><div class="stat-label">This month</div><div class="stat-value">${p.earnings}</div><div class="stat-delta">↑ vs last month</div></div>
+      <div class="card stat-card"><div class="stat-label">Active deals</div><div class="stat-value">${activeCount}</div><div class="stat-delta">${myDeals.length} total</div></div>
+      <div class="card stat-card"><div class="stat-label">Profile views</div><div class="stat-value">312</div><div class="stat-delta">↑ 18% this week</div></div>
+    </div>
+
+    <div class="section-head">
+      <h2>Suggested pricing for you</h2>
+      <button class="link-btn" onclick="go('pricing')">Open pricing tool ${icon('arrowr',12)}</button>
+    </div>
+    <div class="card">
+      <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+        <div>
+          <div class="stat-label">${p.niche} · ${p.platform} · ${p.followers}</div>
+          <div class="stat-value" style="font-size:26px; margin-top:8px;">${p.rate}</div>
+        </div>
+        <div class="hint" style="flex:1; min-width:180px;">Based on 40+ recent deals from creators like you in ${p.location.split(',')[1] || p.location}.</div>
+      </div>
+    </div>
+
+    <div class="section-head">
+      <h2>Open briefs for you</h2>
+      <button class="link-btn" onclick="go('briefs')">See all ${icon('arrowr',12)}</button>
+    </div>
+    <div class="grid grid-2">
+      ${BRIEFS.slice(0,2).map(briefCardHTML).join('')}
+    </div>
+
+    <div class="section-head">
+      <h2>Recent deals</h2>
+      <button class="link-btn" onclick="go('deals')">See all ${icon('arrowr',12)}</button>
+    </div>
+    ${myDeals.slice(0,2).map(d=>dealRowHTML(d,'creator')).join('') || emptyDeals()}
+  `;
+}
+
+function briefCardHTML(b){
+  return `<div class="brief-card">
+    <div class="bc-top">
+      <div><h3>${b.brand}</h3><div class="bc-meta">${b.region}</div></div>
+      ${b.applied?'<span class="badge-verified">'+icon('check',10)+' Applied</span>':''}
+    </div>
+    <div class="bc-tags">
+      <span class="chip">${b.niche}</span><span class="chip">${b.language}</span><span class="chip">${b.deliverable}</span>
+    </div>
+    <div style="display:flex; align-items:center; justify-content:space-between;">
+      <div class="mono" style="font-weight:700; font-size:14px;">${b.budget}</div>
+      <button class="btn btn-accent btn-sm" ${b.applied?'disabled':''} onclick="applyBrief(${b.id})">${b.applied?'Applied':'Apply'}</button>
+    </div>
+  </div>`;
+}
+
+function applyBrief(id){
+  const b = BRIEFS.find(x=>x.id===id);
+  b.applied = true;
+  const p = persona();
+  const brandPays = Math.round((parseInt(b.budget.replace(/[^0-9–]/g,'').split('–')[0]) + parseInt(b.budget.replace(/[^0-9–]/g,'').split('–')[1]))/2 || 8000);
+  DEALS.unshift({id:dealSeq++, creator:p.name, brand:b.brand, brief:b.brief||b.niche+' campaign', status:'negotiating', brandPays: brandPays, feePct:6, thread:[
+    {from:'them', text:`Thanks for applying, ${p.name.split(' ')[0]}! Let's finalize scope and rate for the "${b.deliverable}" deliverable.`, t:'Just now'}
+  ]});
+  toast('Application sent — deal opened in My Deals');
+  renderShell();
+}
+
+function emptyDeals(){
+  return `<div class="empty-state">${icon('empty')}<h3>No deals yet</h3><p>Apply to an open brief to start your first deal — funds are always held in escrow before delivery.</p></div>`;
+}
+
+/* ======================= CREATOR: BRIEFS ======================= */
+function creatorBriefs(){
+  return `
+    <div class="section-head" style="margin-top:0;"><h2>Open briefs matched to your profile</h2></div>
+    <div class="filter-bar">
+      <span class="chip">${icon('filter',11)} Hindi</span><span class="chip">${icon('filter',11)} Tamil</span><span class="chip">${icon('filter',11)} Under ₹15,000</span>
+    </div>
+    <div class="grid grid-2">${BRIEFS.map(briefCardHTML).join('')}</div>
+  `;
+}
+
+/* ======================= CREATOR: PRICING TOOL ======================= */
+const RATE_TABLE = {
+  'YouTube-Beauty':[6000,9500],'YouTube-Food':[4000,7000],'YouTube-Tech':[8000,13000],'YouTube-Fashion':[5000,8500],
+  'Instagram-Beauty':[7000,12000],'Instagram-Food':[4500,7500],'Instagram-Tech':[6500,10500],'Instagram-Fashion':[6000,10000],
+};
+function pricingTool(){
+  const platform = window._pt_platform || 'YouTube';
+  const niche = window._pt_niche || 'Beauty';
+  const tier = window._pt_tier || '10K–50K';
+  const key = platform+'-'+niche;
+  let [lo,hi] = RATE_TABLE[key] || [5000,9000];
+  const mult = tier==='Under 10K'?0.6: tier==='10K–50K'?1: tier==='50K–200K'?1.7:2.6;
+  lo = Math.round(lo*mult/500)*500; hi = Math.round(hi*mult/500)*500;
+  return `
+    <div class="section-head" style="margin-top:0;"><h2>Real-time pricing benchmark</h2></div>
+    <p class="hint" style="margin-bottom:16px;">Get a fair rate range for your next deal, based on live deals closed by creators like you — not a guess.</p>
+    <div class="card">
+      <div class="grid grid-3">
+        <div class="form-row" style="margin:0;"><label>Platform</label>
+          <select onchange="window._pt_platform=this.value; go('pricing')">
+            ${['YouTube','Instagram'].map(o=>`<option ${platform===o?'selected':''}>${o}</option>`).join('')}
+          </select>
+        </div>
+        <div class="form-row" style="margin:0;"><label>Niche</label>
+          <select onchange="window._pt_niche=this.value; go('pricing')">
+            ${['Beauty','Food','Tech','Fashion'].map(o=>`<option ${niche===o?'selected':''}>${o}</option>`).join('')}
+          </select>
+        </div>
+        <div class="form-row" style="margin:0;"><label>Follower tier</label>
+          <select onchange="window._pt_tier=this.value; go('pricing')">
+            ${['Under 10K','10K–50K','50K–200K','200K+'].map(o=>`<option ${tier===o?'selected':''}>${o}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="section-head"><h2>Suggested range</h2></div>
+    <div class="card" style="text-align:center; padding:30px 16px;">
+      <div class="stat-label">${platform} · ${niche} · ${tier} followers</div>
+      <div class="stat-value" style="font-size:34px; margin-top:10px;">₹${lo.toLocaleString('en-IN')} – ₹${hi.toLocaleString('en-IN')}</div>
+      <div class="hint" style="margin-top:10px;">per deliverable, based on 40+ closed deals in the last 30 days</div>
+    </div>
+    <div class="section-head"><h2>Why this matters</h2></div>
+    <div class="card">
+      <div class="hint">On a ${fmtINR(hi)} deal under the old exclusive-agency model, a creator typically kept only ${fmtINR(Math.round(hi*0.375))} (35–40%). On Rangmanch, you'd keep ${fmtINR(Math.round(hi*0.94))} (94%).</div>
+    </div>
+  `;
+}
+
+/* ======================= CREATOR: PROFILE ======================= */
+function creatorProfile(){
+  const p = persona();
+  return `
+    <div class="card" style="display:flex; gap:16px; align-items:center; flex-wrap:wrap;">
+      <div class="avatar" style="width:64px;height:64px;font-size:20px;">${p.initials}</div>
+      <div style="flex:1; min-width:180px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <h2 class="display" style="margin:0; font-size:19px;">${p.name}</h2>
+          <span class="badge-verified">${icon('check',10)} Verified</span>
+        </div>
+        <div class="hint" style="margin-top:2px;">${p.niche} creator · ${p.location} · Speaks ${p.language}</div>
+      </div>
+      ${scoreRing(p.trust,'TRUST')}
+    </div>
+
+    <div class="grid grid-3" style="margin-top:14px;">
+      <div class="card stat-card"><div class="stat-label">Platform</div><div class="stat-value" style="font-size:16px;">${p.platform}</div></div>
+      <div class="card stat-card"><div class="stat-label">Audience</div><div class="stat-value" style="font-size:16px;">${p.followers}</div></div>
+      <div class="card stat-card"><div class="stat-label">Engagement</div><div class="stat-value" style="font-size:16px;">${p.engagement}</div></div>
+    </div>
+
+    <div class="section-head"><h2>Scores brands see</h2></div>
+    <div class="grid grid-2">
+      <div class="card" style="display:flex; align-items:center; gap:14px;">${scoreRing(p.trust,'TRUST')}<div><div style="font-weight:700; font-size:13px;">Trust score</div><div class="hint">Verification, reliability &amp; deal history</div></div></div>
+      <div class="card" style="display:flex; align-items:center; gap:14px;">${scoreRing(p.authenticity,'REAL')}<div><div style="font-weight:700; font-size:13px;">Audience authenticity</div><div class="hint">Estimated real vs. bot-driven followers</div></div></div>
+    </div>
+
+    <div class="section-head"><h2>Rate card</h2></div>
+    <div class="card"><div class="stat-value" style="font-size:22px;">${p.rate}</div><div class="hint" style="margin-top:6px;">Auto-suggested from the pricing benchmark tool — you can override per deal.</div></div>
+
+    <div class="section-head"><h2>Portfolio</h2></div>
+    <div class="grid grid-3">
+      ${[1,2,3].map(i=>`<div class="card" style="aspect-ratio:1/1; display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg,#F0E6D2,#E7DCC4); color:var(--slate); font-size:11px;">Sample content ${i}</div>`).join('')}
+    </div>
+  `;
+}
+
+/* ======================= DEALS (shared) ======================= */
+function dealsView(perspective){
+  if(state.activeDeal){
+    const d = DEALS.find(x=>x.id===state.activeDeal);
+    if(d) return dealDetail(d, perspective);
+  }
+  let list = DEALS;
+  if(perspective==='creator'){ list = DEALS.filter(d=>d.creator===persona().name); }
+  return `
+    <div class="section-head" style="margin-top:0;"><h2>${perspective==='creator'?'My deals':'All deals'}</h2></div>
+    ${list.length? list.map(d=>dealRowHTML(d,perspective)).join('') : emptyDeals()}
+  `;
+}
+
+function dealRowHTML(d, perspective){
+  const other = perspective==='creator' ? d.brand : d.creator;
+  const fee = Math.round(d.brandPays*d.feePct/100);
+  const amt = perspective==='creator' ? d.brandPays-fee : d.brandPays;
+  return `<div class="card" style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px; cursor:pointer;" onclick="openDeal(${d.id})">
+    <div style="display:flex; align-items:center; gap:12px; min-width:0;">
+      <div class="avatar" style="background:var(--ink); color:#fff;">${other.split(' ').map(w=>w[0]).slice(0,2).join('')}</div>
+      <div style="min-width:0;">
+        <div style="font-weight:700; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${other}</div>
+        <div class="hint" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${d.brief}</div>
+      </div>
+    </div>
+    <div style="text-align:right; flex-shrink:0;">
+      <div class="mono" style="font-weight:700; font-size:13px;">${fmtINR(amt)}</div>
+      <div style="margin-top:4px;">${statusPill(d.status)}</div>
+    </div>
+  </div>`;
+}
+
+function openDeal(id){ state.activeDeal = id; renderShell(); }
+function backToDeals(){ state.activeDeal = null; renderShell(); }
+
+function dealDetail(d, perspective){
+  const other = perspective==='creator' ? d.brand : d.creator;
+  const nextAction = dealNextAction(d, perspective);
+  return `
+    <button class="btn btn-ghost btn-sm" onclick="backToDeals()" style="margin-bottom:14px;">&larr; Back to deals</button>
+    <div class="section-head" style="margin-top:0;">
+      <h2>${d.brief}</h2>${statusPill(d.status)}
+    </div>
+    <div class="hint" style="margin-bottom:10px;">${perspective==='creator'?'Brand':'Creator'}: <b style="color:var(--ink);">${other}</b></div>
+    ${timelineFor(d.status)}
+    ${ledger(d.brandPays, d.feePct)}
+    <div style="margin-top:14px;">${nextAction}</div>
+
+    <div class="section-head"><h2>Messages</h2></div>
+    <div class="chat-thread">
+      <div class="chat-msgs" id="chatMsgs">
+        ${d.thread.map(m=>`<div class="msg ${m.from==='me'?'me':'them'}">${m.text}<div class="t">${m.t}</div></div>`).join('')}
+      </div>
+      <div class="chat-input">
+        <input type="text" id="chatInput" placeholder="Write a message…" onkeydown="if(event.key==='Enter')sendMsg(${d.id})">
+        <button class="btn btn-primary btn-sm" onclick="sendMsg(${d.id})">${icon('send',14)}</button>
+      </div>
+    </div>
+  `;
+}
+
+function dealNextAction(d, perspective){
+  if(d.status==='negotiating'){
+    if(perspective==='creator') return `<button class="btn btn-accent btn-block" onclick="advanceDeal(${d.id})">Accept terms &amp; request escrow</button>`;
+    return `<button class="btn btn-accent btn-block" onclick="advanceDeal(${d.id})">Fund escrow for ${fmtINR(d.brandPays)}</button>`;
+  }
+  if(d.status==='escrow'){
+    if(perspective==='creator') return `<button class="btn btn-accent btn-block" onclick="advanceDeal(${d.id})">Mark deliverable as submitted</button>`;
+    return `<div class="hint">Waiting for the creator to submit the deliverable. Funds are safely held in escrow.</div>`;
+  }
+  if(d.status==='delivered'){
+    if(perspective==='creator') return `<div class="hint">Delivered — waiting for brand approval to release payment.</div>`;
+    return `<button class="btn btn-accent btn-block" onclick="advanceDeal(${d.id})">Approve &amp; release payment</button>`;
+  }
+  return `<div class="hint">${icon('check',12)} Payment complete. Receipt available in your deal history.</div>`;
+}
+
+function advanceDeal(id){
+  const d = DEALS.find(x=>x.id===id);
+  const order = ['negotiating','escrow','delivered','paid'];
+  const idx = order.indexOf(d.status);
+  if(idx<order.length-1){ d.status = order[idx+1]; toast('Deal moved to "'+order[idx+1]+'"'); }
+  renderShell();
+}
+function sendMsg(id){
+  const input = document.getElementById('chatInput');
+  if(!input || !input.value.trim()) return;
+  const d = DEALS.find(x=>x.id===id);
+  d.thread.push({from:'me', text:input.value.trim(), t:'Just now'});
+  renderShell();
+  setTimeout(()=>{ const el=document.getElementById('chatMsgs'); if(el) el.scrollTop = el.scrollHeight; }, 30);
+}
+
+/* ======================= BRAND: DASHBOARD ======================= */
+function brandDashboard(){
+  const p = persona();
+  return `
+    <div class="section-head" style="margin-top:0;"><h2>Welcome back, ${p.name.split(' ')[0]}</h2></div>
+    <div class="grid grid-stats">
+      <div class="card stat-card"><div class="stat-label">Active campaigns</div><div class="stat-value">3</div></div>
+      <div class="card stat-card"><div class="stat-label">Spend this quarter</div><div class="stat-value">₹4.2L</div><div class="stat-delta">of ${p.budget}</div></div>
+      <div class="card stat-card"><div class="stat-label">Avg. campaign ROI</div><div class="stat-value">3.4×</div></div>
+      <div class="card stat-card"><div class="stat-label">Creators worked with</div><div class="stat-value">14</div></div>
+    </div>
+    <div class="section-head">
+      <h2>Get started</h2>
+    </div>
+    <div class="grid grid-2">
+      <div class="card">
+        <div style="font-weight:700; margin-bottom:6px;">${icon('plus',15)} Post a new campaign brief</div>
+        <div class="hint" style="margin-bottom:12px;">Tell us your region, language, niche and budget — get an AI-matched shortlist in minutes.</div>
+        <button class="btn btn-accent" onclick="go('newbrief')">New brief</button>
+      </div>
+      <div class="card">
+        <div style="font-weight:700; margin-bottom:6px;">${icon('search',15)} Browse verified creators</div>
+        <div class="hint" style="margin-bottom:12px;">Search Tier 2/3 creators by region, language and niche — with authenticity scores built in.</div>
+        <button class="btn btn-ghost" onclick="go('shortlist')">Open shortlist</button>
+      </div>
+    </div>
+    <div class="section-head"><h2>Recent deals</h2><button class="link-btn" onclick="go('deals')">See all ${icon('arrowr',12)}</button></div>
+    ${DEALS.slice(0,2).map(d=>dealRowHTML(d,'brand')).join('')}
+  `;
+}
+
+/* ======================= BRAND: NEW BRIEF ======================= */
+function newBrief(){
+  const regions = ['UP + Bihar','Tamil Nadu','Odisha','Rajasthan','Maharashtra'];
+  const langs = ['Hindi','Tamil','Telugu','Odia','English'];
+  const sel = window._brief_state || {region:'UP + Bihar', lang:'Hindi', niche:'Beauty'};
+  window._brief_state = sel;
+  return `
+    <div class="section-head" style="margin-top:0;"><h2>Create a campaign brief</h2></div>
+    <div class="card">
+      <div class="form-row"><label>Campaign name</label><input type="text" value="Hindi Belt Beauty Push" id="bf_name"></div>
+      <div class="form-row"><label>Goal</label>
+        <select id="bf_goal"><option>Brand awareness</option><option>Product launch</option><option selected>Conversions / sales</option></select>
+      </div>
+      <div class="form-row"><label>Budget range</label>
+        <div style="display:flex; gap:10px;"><input type="text" value="8000" id="bf_lo"><input type="text" value="15000" id="bf_hi"></div>
+      </div>
+      <div class="form-row"><label>Target region(s)</label>
+        <div class="pill-select">${regions.map(r=>`<button type="button" class="${sel.region===r?'sel':''}" onclick="window._brief_state.region='${r}'; go('newbrief')">${r}</button>`).join('')}</div>
+      </div>
+      <div class="form-row"><label>Language(s)</label>
+        <div class="pill-select">${langs.map(l=>`<button type="button" class="${sel.lang===l?'sel':''}" onclick="window._brief_state.lang='${l}'; go('newbrief')">${l}</button>`).join('')}</div>
+      </div>
+      <div class="form-row"><label>Creator niche</label>
+        <div class="pill-select">${['Beauty','Food','Tech','Fashion','Fitness'].map(n=>`<button type="button" class="${sel.niche===n?'sel':''}" onclick="window._brief_state.niche='${n}'; go('newbrief')">${n}</button>`).join('')}</div>
+      </div>
+      <div class="form-row"><label>Deliverables</label><textarea id="bf_del">1 Instagram Reel + 1 Story, delivered within 10 days.</textarea></div>
+      <button class="btn btn-accent btn-block" onclick="submitBrief()">${icon('search',14)} Generate AI-matched shortlist</button>
+    </div>
+  `;
+}
+function submitBrief(){
+  toast('Brief posted — AI shortlist ready');
+  go('shortlist');
+}
+
+/* ======================= BRAND: SHORTLIST ======================= */
+function shortlistView(){
+  if(state.shortlistCreator){
+    const c = CREATORS.find(x=>x.id===state.shortlistCreator);
+    if(c) return creatorProfileForBrand(c);
+  }
+  const sel = window._brief_state || {region:'UP + Bihar', lang:'Hindi', niche:'Beauty'};
+  const matched = CREATORS.filter(c=> c.language===sel.lang || c.niche.toLowerCase().includes(sel.niche.toLowerCase()) ).slice(0,6);
+  const list = matched.length ? matched : CREATORS.slice(0,6);
+  return `
+    <div class="section-head" style="margin-top:0;"><h2>AI-matched shortlist</h2></div>
+    <div class="filter-bar">
+      <span class="chip"><span class="chip-dot" style="background:var(--saffron);"></span>${sel.lang}</span>
+      <span class="chip"><span class="chip-dot" style="background:var(--sage);"></span>${sel.niche}</span>
+      <span class="chip"><span class="chip-dot" style="background:var(--vermilion);"></span>${sel.region}</span>
+    </div>
+    <div class="grid grid-2">${list.map(creatorCardHTML).join('')}</div>
+  `;
+}
+
+function creatorCardHTML(c){
+  return `<div class="creator-card">
+    <div class="cc-head">
+      <div class="avatar">${c.name.split(' ').map(w=>w[0]).slice(0,2).join('')}</div>
+      <div style="flex:1;">
+        <div class="cc-name">${c.name} ${c.verified?icon('check',12):''}</div>
+        <div class="cc-sub">${c.niche} · ${c.location}</div>
+      </div>
+    </div>
+    <div class="cc-stats">
+      <span>${c.platform} · <b>${c.followers}</b></span>
+      <span>Eng. <b>${c.engagement}</b></span>
+    </div>
+    <div class="cc-stats">
+      <span>Trust <b style="color:${scoreColor(c.trust)}">${c.trust}</b></span>
+      <span>Authentic <b style="color:${scoreColor(c.authenticity)}">${c.authenticity}%</b></span>
+    </div>
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <div class="mono" style="font-weight:700; font-size:12.5px;">${c.rate}</div>
+      <button class="btn btn-ghost btn-sm" onclick="viewCreator('${c.id}')">View profile</button>
+    </div>
+  </div>`;
+}
+function viewCreator(id){ state.shortlistCreator = id; renderShell(); }
+function backToShortlist(){ state.shortlistCreator = null; renderShell(); }
+
+function creatorProfileForBrand(c){
+  return `
+    <button class="btn btn-ghost btn-sm" onclick="backToShortlist()" style="margin-bottom:14px;">&larr; Back to shortlist</button>
+    <div class="card" style="display:flex; gap:16px; align-items:center; flex-wrap:wrap;">
+      <div class="avatar" style="width:64px;height:64px;font-size:20px;">${c.name.split(' ').map(w=>w[0]).slice(0,2).join('')}</div>
+      <div style="flex:1; min-width:180px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <h2 class="display" style="margin:0; font-size:19px;">${c.name}</h2>
+          ${c.verified?'<span class="badge-verified">'+icon('check',10)+' Verified</span>':''}
+        </div>
+        <div class="hint" style="margin-top:2px;">${c.niche} · ${c.location} · Speaks ${c.language}</div>
+      </div>
+      ${scoreRing(c.trust,'TRUST')}
+    </div>
+    <div class="grid grid-3" style="margin-top:14px;">
+      <div class="card stat-card"><div class="stat-label">Platform</div><div class="stat-value" style="font-size:16px;">${c.platform}</div></div>
+      <div class="card stat-card"><div class="stat-label">Audience</div><div class="stat-value" style="font-size:16px;">${c.followers}</div></div>
+      <div class="card stat-card"><div class="stat-label">Engagement</div><div class="stat-value" style="font-size:16px;">${c.engagement}</div></div>
+    </div>
+    <div class="section-head"><h2>Rate card</h2></div>
+    <div class="card"><div class="stat-value" style="font-size:20px;">${c.rate}</div></div>
+    <button class="btn btn-accent btn-block" style="margin-top:16px;" onclick="sendOffer('${c.id}')">Send offer</button>
+  `;
+}
+function sendOffer(id){
+  const c = CREATORS.find(x=>x.id===id);
+  const p = persona();
+  const brandPays = parseInt((c.rate.match(/\d[\d,]*/g)||['8000'])[1] || (c.rate.match(/\d[\d,]*/g)||['8000'])[0].replace(/,/g,''));
+  DEALS.unshift({id:dealSeq++, creator:c.name, brand:p.company||p.name, brief:(window._brief_state? window._brief_state.niche : c.niche)+' campaign', status:'negotiating', brandPays: brandPays||8000, feePct:6, thread:[
+    {from:'me', text:`Hi ${c.name.split(' ')[0]}, we'd love to work with you on our upcoming campaign. Sharing terms here.`, t:'Just now'}
+  ]});
+  state.shortlistCreator = null;
+  toast('Offer sent — deal opened');
+  go('deals');
+}
+
+/* ======================= AGENCY: DASHBOARD ======================= */
+function agencyDashboard(){
+  return `
+    <div class="section-head" style="margin-top:0;"><h2>Welcome back, ${persona().name.split(' ')[0]}</h2></div>
+    <div class="grid grid-stats">
+      <div class="card stat-card"><div class="stat-label">Active clients</div><div class="stat-value">10</div></div>
+      <div class="card stat-card"><div class="stat-label">Campaigns in progress</div><div class="stat-value">17</div></div>
+      <div class="card stat-card"><div class="stat-label">Avg. time-to-shortlist</div><div class="stat-value">1.8 hrs</div><div class="stat-delta">was 2 weeks, manually</div></div>
+      <div class="card stat-card"><div class="stat-label">Creators in database</div><div class="stat-value">${CREATORS.length*40}+</div></div>
+    </div>
+    <div class="section-head"><h2>Quick actions</h2></div>
+    <div class="grid grid-2">
+      <div class="card"><div style="font-weight:700; margin-bottom:6px;">${icon('search',15)} Run a bulk search</div><div class="hint" style="margin-bottom:12px;">Find creators across multiple regions and languages for a client brief.</div><button class="btn btn-accent" onclick="go('bulksearch')">Open bulk search</button></div>
+      <div class="card"><div style="font-weight:700; margin-bottom:6px;">${icon('grid',15)} View campaign board</div><div class="hint" style="margin-bottom:12px;">Track every client campaign from brief to payout in one place.</div><button class="btn btn-ghost" onclick="go('board')">Open board</button></div>
+    </div>
+  `;
+}
+
+/* ======================= AGENCY: BULK SEARCH ======================= */
+function bulkSearchView(){
+  return `
+    <div class="section-head" style="margin-top:0;"><h2>Bulk creator search</h2></div>
+    <div class="filter-bar">
+      <span class="chip">${icon('filter',11)} Tamil Nadu</span><span class="chip">${icon('filter',11)} Hindi Belt</span><span class="chip">${icon('filter',11)} Odisha</span>
+      <button class="btn btn-ghost btn-sm" style="margin-left:auto;" onclick="toast('12 creators added to shortlist')">Add selected to shortlist</button>
+    </div>
+    <div class="card" style="padding:0; overflow-x:auto;">
+      <table class="data-table">
+        <thead><tr><th></th><th>Creator</th><th>Region</th><th>Language</th><th>Niche</th><th>Followers</th><th>Trust</th><th>Rate</th></tr></thead>
+        <tbody>
+          ${CREATORS.map(c=>`<tr>
+            <td><input type="checkbox"></td>
+            <td style="font-weight:700;">${c.name}</td>
+            <td>${c.location}</td>
+            <td>${c.language}</td>
+            <td>${c.niche}</td>
+            <td class="mono">${c.followers}</td>
+            <td style="color:${scoreColor(c.trust)}; font-weight:700;">${c.trust}</td>
+            <td class="mono">${c.rate}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+/* ======================= AGENCY: BOARD ======================= */
+const BOARD_COLS = ['Brief posted','Shortlisted','In deal','Delivered','Paid'];
+function boardView(){
+  const cols = {
+    'Brief posted':[{name:'Odisha Handloom Co.', meta:'3 creators needed · Fashion'}],
+    'Shortlisted':[{name:'Bharat Snacks Ltd.', meta:'6 creators shortlisted'}],
+    'In deal':[{name:'GlowSkin (D2C)', meta:'2 creators · escrow funded'}],
+    'Delivered':[{name:'Coimbatore Organics', meta:'1 creator · awaiting approval'}],
+    'Paid':[{name:'Patna Textiles', meta:'4 creators · closed'}]
+  };
+  return `
+    <div class="section-head" style="margin-top:0;"><h2>Campaign board</h2></div>
+    <div class="kanban">
+      ${BOARD_COLS.map(col=>`
+        <div class="kanban-col">
+          <h4>${col} <span>${cols[col].length}</span></h4>
+          ${cols[col].map(card=>`<div class="kanban-card"><div class="kc-name">${card.name}</div><div class="kc-meta">${card.meta}</div><button class="btn btn-ghost btn-sm" onclick="toast('Card detail is a stub in this prototype')">View</button></div>`).join('')}
+        </div>`).join('')}
+    </div>
+  `;
+}
+
+/* ======================= ANALYTICS ======================= */
+function analyticsView(role){
+  const regionData = [
+    {l:'UP', v:38}, {l:'TN', v:52}, {l:'Odisha', v:21}, {l:'Bihar', v:29}, {l:'Rajasthan', v:17}
+  ];
+  const max = Math.max(...regionData.map(d=>d.v));
+  return `
+    <div class="section-head" style="margin-top:0;"><h2>Campaign performance</h2></div>
+    <div class="grid grid-stats">
+      <div class="card stat-card"><div class="stat-label">Total reach</div><div class="stat-value">4.8M</div></div>
+      <div class="card stat-card"><div class="stat-label">Avg. engagement</div><div class="stat-value">10.6%</div></div>
+      <div class="card stat-card"><div class="stat-label">ROI multiplier</div><div class="stat-value">3.4×</div></div>
+      <div class="card stat-card"><div class="stat-label">Creators paid</div><div class="stat-value">${role==='agency'?'46':'14'}</div></div>
+    </div>
+    <div class="section-head"><h2>Spend by region (₹000s)</h2></div>
+    <div class="card">
+      <div class="bar-chart">
+        ${regionData.map(d=>`<div class="bar-col"><div class="bar-val">${d.v}</div><div class="bar" style="height:${(d.v/max*100)}px;"></div><div class="bar-label">${d.l}</div></div>`).join('')}
+      </div>
+    </div>
+    <div class="section-head"><h2>Top creators by ROI</h2></div>
+    <div class="card" style="padding:0; overflow-x:auto;">
+      <table class="data-table">
+        <thead><tr><th>Creator</th><th>Region</th><th>Spend</th><th>Engagement</th><th>ROI</th></tr></thead>
+        <tbody>
+          ${CREATORS.slice(0,5).map((c,i)=>`<tr><td style="font-weight:700;">${c.name}</td><td>${c.location}</td><td class="mono">${c.rate.split(' ')[0]}</td><td>${c.engagement}</td><td class="mono" style="color:var(--sage); font-weight:700;">${(2.1+i*0.4).toFixed(1)}×</td></tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+/* ======================= ONBOARDING ======================= */
+const LANGS = [
+  {id:'hi', label:'हिंदी', sub:'Hindi'}, {id:'ta', label:'தமிழ்', sub:'Tamil'},
+  {id:'te', label:'తెలుగు', sub:'Telugu'}, {id:'en', label:'English', sub:'English'}
+];
+function renderOnboarding(){
+  const step = state.onboardStep;
+  const steps = [onboardLang, onboardConnect, onboardPricing, onboardProfile];
+  return `<div class="app-shell" style="width:100%; display:flex; align-items:stretch; justify-content:center; padding:30px 18px; background:var(--cream);">
+    <div style="width:100%; max-width:420px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+        <div class="brand-mark" style="font-family:'Fraunces',serif; font-weight:600;">Rangmanch<span style="color:var(--vermilion)">.</span></div>
+        ${step>0?`<button class="btn btn-ghost btn-sm" onclick="skipOnboard()">Skip</button>`:''}
+      </div>
+      ${steps[step]()}
+      <div class="progress-dots">${[0,1,2,3].map(i=>`<span class="${i===step?'on':''}"></span>`).join('')}</div>
+    </div>
+  </div>`;
+}
+function skipOnboard(){ finishOnboarding(); }
+function onboardLang(){
+  return `<div class="onboard-wrap">
+    <div class="step-icon">${icon('user',26)}</div>
+    <h2>Choose your language</h2>
+    <p class="sub">Rangmanch works fully in your language — profile, contracts and deal terms included.</p>
+    <div class="lang-grid">
+      ${LANGS.map(l=>`<button class="${state.onboardLang===l.id?'sel':''}" onclick="state.onboardLang='${l.id}'; renderShell();"><span class="native">${l.label}</span>${l.sub}</button>`).join('')}
+    </div>
+    <button class="btn btn-accent btn-block" style="margin-top:14px;" ${!state.onboardLang?'disabled':''} onclick="state.onboardStep=1; renderShell();">Continue ${icon('arrowr',13)}</button>
+  </div>`;
+}
+function onboardConnect(){
+  const c = state.onboardConnected;
+  return `<div class="onboard-wrap">
+    <div class="step-icon">${icon('shield',26)}</div>
+    <h2>Verify your account</h2>
+    <p class="sub">Connect one platform so brands can see your real, verified stats — this is what powers your trust score.</p>
+    <div class="connect-row" onclick="c_toggle('yt')">
+      <div class="cr-left"><div class="platform-ic" style="background:#B84B26;">YT</div><div style="text-align:left;"><div style="font-weight:700; font-size:13px;">YouTube</div><div class="hint">18.2K subscribers found</div></div></div>
+      ${c.yt?icon('check',18):'<span class="btn btn-ghost btn-sm">Connect</span>'}
+    </div>
+    <div class="connect-row" onclick="c_toggle('ig')">
+      <div class="cr-left"><div class="platform-ic" style="background:#8A4FCB;">IG</div><div style="text-align:left;"><div style="font-weight:700; font-size:13px;">Instagram</div><div class="hint">Not connected yet</div></div></div>
+      ${c.ig?icon('check',18):'<span class="btn btn-ghost btn-sm">Connect</span>'}
+    </div>
+    <div style="display:flex; gap:10px; margin-top:8px;">
+      <button class="btn btn-ghost btn-block" onclick="state.onboardStep=0; renderShell();">Back</button>
+      <button class="btn btn-accent btn-block" ${!(c.yt||c.ig)?'disabled':''} onclick="state.onboardStep=2; renderShell();">Continue ${icon('arrowr',13)}</button>
+    </div>
+  </div>`;
+}
+function c_toggle(k){ state.onboardConnected[k] = !state.onboardConnected[k]; renderShell(); }
+function onboardPricing(){
+  return `<div class="onboard-wrap">
+    <div class="step-icon">${icon('tag',26)}</div>
+    <h2>Here's what creators like you earn</h2>
+    <p class="sub">Based on your niche, platform and audience size — refreshed from live deals, not a guess.</p>
+    <div class="card" style="text-align:center; padding:26px 16px;">
+      <div class="stat-label">Food &amp; Lifestyle · YouTube · 10K–50K</div>
+      <div class="stat-value" style="font-size:30px; margin-top:8px;">₹4,000 – ₹6,500</div>
+      <div class="hint" style="margin-top:8px;">per video, and you keep 94% of it</div>
+    </div>
+    <div style="display:flex; gap:10px; margin-top:14px;">
+      <button class="btn btn-ghost btn-block" onclick="state.onboardStep=1; renderShell();">Back</button>
+      <button class="btn btn-accent btn-block" onclick="state.onboardStep=3; renderShell();">Continue ${icon('arrowr',13)}</button>
+    </div>
+  </div>`;
+}
+function onboardProfile(){
+  return `<div class="onboard-wrap">
+    <div class="step-icon">${icon('check',26)}</div>
+    <h2>You're almost live</h2>
+    <p class="sub">Add a short bio so brands know what you're about. You can always edit this later.</p>
+    <div class="form-row" style="text-align:left;"><label>Short bio</label><textarea placeholder="e.g. Food &amp; travel creator from Varanasi, sharing street food tours and dhaba reviews in Hindi.">Food &amp; travel creator from Varanasi, sharing street food tours and dhaba reviews in Hindi.</textarea></div>
+    <div style="display:flex; gap:10px; margin-top:4px;">
+      <button class="btn btn-ghost btn-block" onclick="state.onboardStep=2; renderShell();">Back</button>
+      <button class="btn btn-accent btn-block" onclick="finishOnboarding()">Go to my dashboard</button>
+    </div>
+  </div>`;
+}
+function finishOnboarding(){
+  state.role='creator'; state.persona='rajan'; state.view='dashboard';
+  renderShell();
+  toast('Welcome to Rangmanch, Rajan!');
+}
+
+/* ======================= INIT ======================= */
+function boot(){
+  renderShell();
+}
+document.addEventListener('DOMContentLoaded', boot);
+</script>
+</body>
+</html>
